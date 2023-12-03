@@ -1,16 +1,31 @@
-""""
-Copyright © Krypton 2019-2023 - https://github.com/kkrypt0nn (https://krypton.ninja)
-Description:
-🐍 A simple template to start to code your own and personalized discord bot in Python programming language.
-
-Version: 5.5.0
-"""
 
 import os
-
 import aiosqlite
 
 DATABASE_PATH = f"{os.path.realpath(os.path.dirname(__file__))}/../database/database.db"
+
+async def set_user_ping_count(user_id: int, server_id: int, count: int) -> bool:
+    async with aiosqlite.connect(DATABASE_PATH) as db:
+        async with db.execute(
+            "INSERT INTO user_ping_count SET user_id =?, count=?)",
+            (
+                user_id,
+                count
+            )  
+        ) as cursor:
+            result = await cursor.fetchone()
+            return result[0]
+
+async def get_user_ping_count(user_id: int, server_id: int) -> int:
+    async with aiosqlite.connect(DATABASE_PATH) as db:
+        async with db.execute(
+            "SELECT ping_count FROM user_ping_count WHERE user_id = ?)",
+            (
+                user_id,
+            ),
+        ) as cursor:
+            result = await cursor.fetchone()
+            return result[0]
 
 
 async def get_blacklisted_users() -> list:

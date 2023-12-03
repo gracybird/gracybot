@@ -24,13 +24,13 @@ class BotManager(commands.Cog, name="Bot Manager"):
 
         u = context.author
         s = context.guild
-        c = db_get(context.guild, u, 'PingCount', 'count')
+        c = db_manager.get_user_ping_count(u.id, s.id)
 
         if not c:
             c = 1
         else:
             c = c + 1
-        db_set(s, u, 'PingCount', 'count', c)
+        db_manager.set_user_ping_count(u.id, s.id, c)
 
         embed = discord.Embed(
             title="🏓 Pong!",
