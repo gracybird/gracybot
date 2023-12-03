@@ -7,7 +7,6 @@ Version: 5.5.0
 """
 
 import platform
-import random
 
 import aiohttp
 import discord
