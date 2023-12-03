@@ -7,9 +7,10 @@ Version: 5.5.0
 """
 
 import random
-
 import aiohttp
 import discord
+
+from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Context
 
@@ -103,8 +104,8 @@ class Fun(commands.Cog, name="fun"):
     def __init__(self, bot):
         self.bot = bot
 
+
     @commands.hybrid_command(name="randomfact", description="Get a random fact.")
-    @checks.not_blacklisted()
     async def randomfact(self, context: Context) -> None:
         """
         Get a random fact.
@@ -127,10 +128,10 @@ class Fun(commands.Cog, name="fun"):
                     )
                 await context.send(embed=embed)
 
+
     @commands.hybrid_command(
         name="coinflip", description="Make a coin flip, but give your bet before."
     )
-    @checks.not_blacklisted()
     async def coinflip(self, context: Context) -> None:
         """
         Make a coin flip, but give your bet before.
@@ -154,10 +155,10 @@ class Fun(commands.Cog, name="fun"):
             )
         await message.edit(embed=embed, view=None, content=None)
 
+
     @commands.hybrid_command(
         name="rps", description="Play the rock paper scissors game against the bot."
     )
-    @checks.not_blacklisted()
     async def rock_paper_scissors(self, context: Context) -> None:
         """
         Play the rock paper scissors game against the bot.
@@ -167,11 +168,11 @@ class Fun(commands.Cog, name="fun"):
         view = RockPaperScissorsView()
         await context.send("Please make your choice", view=view)
 
+
     @commands.hybrid_command(
         name="8ball",
         description="Ask any question to the bot.",
     )
-    @checks.not_blacklisted()
     @app_commands.describe(question="The question you want to ask.")
     async def eight_ball(self, context: Context, *, question: str) -> None:
         """
@@ -209,6 +210,7 @@ class Fun(commands.Cog, name="fun"):
         )
         embed.set_footer(text=f"The question was: {question}")
         await context.send(embed=embed)
+
 
 async def setup(bot):
     await bot.add_cog(Fun(bot))

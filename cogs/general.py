@@ -21,10 +21,10 @@ class General(commands.Cog, name="general"):
     def __init__(self, bot):
         self.bot = bot
 
+
     @commands.hybrid_command(
         name="help", description="List all commands the bot has loaded."
     )
-    @checks.not_blacklisted()
     async def help(self, context: Context) -> None:
         prefix = self.bot.config["prefix"]
         embed = discord.Embed(
@@ -43,11 +43,11 @@ class General(commands.Cog, name="general"):
             )
         await context.send(embed=embed)
 
+
     @commands.hybrid_command(
         name="invite",
         description="Get the invite link of the bot to be able to invite it.",
     )
-    @checks.not_blacklisted()
     async def invite(self, context: Context) -> None:
         """
         Get the invite link of the bot to be able to invite it.
