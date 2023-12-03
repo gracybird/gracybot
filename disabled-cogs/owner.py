@@ -328,7 +328,7 @@ class Owner(commands.Cog, name="owner"):
         )
         await context.send(embed=embed)
 
-@commands.hybrid_command(
+    @commands.hybrid_command(
         name="botinfo",
         description="Get some useful (or not) information about the bot.",
     )
