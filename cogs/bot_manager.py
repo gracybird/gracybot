@@ -26,16 +26,25 @@ class BotManager(commands.Cog, name="Bot Manager"):
         s = context.guild
         c = db_manager.get_user_ping_count(u.id, s.id)
 
+        l = {round(self.bot.latency * 1000)}
+        
         if not c:
             c = 1
+            db_manager.insert_user_ping_count(u.id, s.id, c)
         else:
             c = c + 1
-        db_manager.set_user_ping_count(u.id, s.id, c)
+            db_manager.update_user_ping_count(u.id, s.id, c)
+
+        db_manager.insert_latency(l)
+        latencies = db_manager.get_latencies(s.id, 5)
+        total = 0
+        for x in latencies:
+            total = total + latencies[x]
+        average = total / 5
 
         embed = discord.Embed(
             title="🏓 Pong!",
-            description=f"The bot latency is {round(self.bot.latency * 1000)}ms.\n
-            u.display_name + ' you have said ping ' + str(c) + ' times'",
+            description=f"The bot latency is " + str(l) + " ms.\n The average latency over the past 5 pings is " + average + "." + u.nick + " you have said ping " + str(c) + " times",
             color=0x9C84EF,
         )
 

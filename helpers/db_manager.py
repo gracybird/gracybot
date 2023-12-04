@@ -1,27 +1,68 @@
 
 import os
 import aiosqlite
+import datetime
 
 DATABASE_PATH = f"{os.path.realpath(os.path.dirname(__file__))}/../database/database.db"
-
-async def set_user_ping_count(user_id: int, server_id: int, count: int) -> bool:
+async def insert_latency(latency: int) -> bool:
+    date = datetime.datetime
     async with aiosqlite.connect(DATABASE_PATH) as db:
         async with db.execute(
-            "INSERT INTO user_ping_count SET user_id =?, count=?)",
+            "INSERT INTO latency (latency, date) VALUES ?, ?)",
+            (
+                latency,
+                date
+            )
+        ) as cursor:
+            result = await cursor.fetchone()
+            return result[0]
+
+async def get_latencies(server_id: int, limit: int) -> list:
+    async with aiosqlite.connect(DATABASE_PATH) as db:
+        async with db.execute(
+            "SELECT latency FROM latency WHERE server_id = ? ORDER BY date DESC",
+            (
+                server_id,
+            ),
+        ) as cursor:
+            result = await cursor.fetchmany(limit)
+            return result
+
+async def insert_user_ping_count(user_id: int, server_id: int, count: int) -> bool:
+    async with aiosqlite.connect(DATABASE_PATH) as db:
+        async with db.execute(
+            "INSERT INTO user_ping_count (user_id, server_id, count) VALUES ?, ?, ?)",
             (
                 user_id,
+                server_id,
                 count
             )  
         ) as cursor:
             result = await cursor.fetchone()
             return result[0]
 
+
+async def update_user_ping_count(user_id: int, server_id: int, count: int) -> bool:
+        async with aiosqlite.connect(DATABASE_PATH) as db:
+            async with db.execute(
+                "UPDATE user_ping_count SET user_id=?, server_id=?, count=?)",
+                (
+                    user_id,
+                    server_id,
+                    count
+                )
+            ) as cursor:
+                result = await cursor.fetchone()
+                return result[0]
+
+
 async def get_user_ping_count(user_id: int, server_id: int) -> int:
     async with aiosqlite.connect(DATABASE_PATH) as db:
         async with db.execute(
-            "SELECT ping_count FROM user_ping_count WHERE user_id = ?)",
+            "SELECT ping_count FROM user_ping_count WHERE user_id = ? AND server_id = ?)",
             (
                 user_id,
+                server_id
             ),
         ) as cursor:
             result = await cursor.fetchone()
