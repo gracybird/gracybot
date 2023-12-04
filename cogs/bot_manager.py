@@ -24,15 +24,15 @@ class BotManager(commands.Cog, name="Bot Manager"):
 
         u = context.author
         s = context.guild
-        c = db_manager.get_user_ping_count(u.id, s.id)
+        count = db_manager.get_user_ping_count(u.id, s.id)
 
         l = {round(self.bot.latency * 1000)}
         
-        if not c:
+        if not count[0]:
             c = 1
             db_manager.insert_user_ping_count(u.id, s.id, c)
         else:
-            c = c + 1
+            c = count[0] + 1
             db_manager.update_user_ping_count(u.id, s.id, c)
 
         db_manager.insert_latency(l)
